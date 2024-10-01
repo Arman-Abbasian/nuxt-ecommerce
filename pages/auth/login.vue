@@ -6,29 +6,39 @@ const password = ref("");
 const emailError = ref("");
 const passwordError = ref("");
 
+const formData = reactive({ email: "", password: "" });
+const formError = reactive({ emailError: "", passwordError: "" });
+
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   emailError.value = "";
   passwordError.value = "";
 
   if (!validateEmail(email.value)) {
-    emailError.value = "Please enter a valid email address.";
+    formError.emailError = "Please enter a valid email address.";
   }
 
   if (password.value.length < 6) {
-    passwordError.value = "Password must be at least 6 characters long.";
+    formError.passwordError = "Password must be at least 6 characters long.";
   }
 
   if (!emailError.value && !passwordError.value) {
     // Handle successful login
     console.log("Login successful:", {
-      email: email.value,
-      password: password.value,
+      email: formData.email,
+      password: formData.password,
     });
+    const { data, error } = await useAsyncData("login", () =>
+      $fetch("/api/auth/login", {
+        method: "post",
+        body: formData,
+      })
+    );
+    console.log({ data, error: error.value.data.error });
   }
 };
 </script>
@@ -42,13 +52,15 @@ const handleSubmit = () => {
           <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
               id="email"
-              v-model="email"
+              v-model="formData.email"
               required
             />
-            <div v-if="emailError" class="text-danger">{{ emailError }}</div>
+            <div v-if="formError.emailError" class="text-danger">
+              {{ emailError }}
+            </div>
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
@@ -56,7 +68,7 @@ const handleSubmit = () => {
               type="password"
               class="form-control"
               id="password"
-              v-model="password"
+              v-model="formData.password"
               required
             />
             <div v-if="passwordError" class="text-danger">
