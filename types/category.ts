@@ -1,5 +1,12 @@
 export interface CategoryType {
   id: number;
-  name: string;
+  label: string;
+  image: { src: string };
+}
+export interface GetCategoryRes {
+  creationAt: string;
+  id: number;
   image: string;
+  name: string;
+  updatedAt: string;
 }

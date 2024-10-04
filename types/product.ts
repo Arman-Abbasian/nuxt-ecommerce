@@ -8,3 +8,10 @@ export interface productType {
   category: CategoryType;
   images: string[];
 }
+
+export type FilterOptionsTypes = {
+  title: string;
+  categoryId: number | null;
+  price_min: number;
+  price_max: number;
+};

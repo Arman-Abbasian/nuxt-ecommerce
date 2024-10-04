@@ -1,69 +1,70 @@
 <script setup lang="ts">
-import type { CategoryType } from "~/types/category";
-import type { productType } from "../../types/product";
+import type { CategoryType, GetCategoryRes } from "~/types/category";
+import type { FilterOptionsTypes, productType } from "../../types/product";
 import { truncateText } from "~/utils/stringFUnc";
 import { getProducts } from "~/services/products";
+import { useRouter, useRoute } from "vue-router";
+import type { Avatar } from "#ui/types";
 
-//filter type
-type FilterOptionsTyps = {
-  title: string;
-  category: string;
-  minPrice: number;
-  maxPrice: number;
-};
 //---------------------
 const products = ref<productType[]>([]);
 const categories = ref<CategoryType[]>([]);
-const query = ref<any>(null);
+const selectedCategory = ref<CategoryType>({} as CategoryType);
 
-const filters: FilterOptionsTyps = reactive({
+console.log(categories.value);
+const filters = reactive<FilterOptionsTypes>({
   title: "",
-  category: "",
-  minPrice: 0,
-  maxPrice: 0,
+  categoryId: null,
+  price_min: 0,
+  price_max: 0,
 });
-
 // Router and Route for query string management
 const router = useRouter();
 const route = useRoute();
 
 // Update the query string and send request to backend
-const updateFilters = () => {
-  const query = { ...filters };
+const updateFilters = async () => {
+  const query: FilterOptionsTypes = { ...filters };
 
-  // Remove empty values from query
-  Object.keys(query).forEach((key) => {
-    if (!query[key]) delete query[key];
+  // Remove empty or default values from the query (keep non-zero numbers)
+  Object.keys(query).forEach((key: string) => {
+    if (!query[key]) {
+      delete query[key]; // Remove if it's falsy but not 0
+    }
   });
-
   // Update the query string in the URL
-  router.push({ query });
-
+  await router.push({ query });
   // Send request to the backend with updated query params
   fetchFilteredProducts();
 };
 
 // Fetch the filtered products from the backend
-const fetchFilteredProducts = async () => {
-  // Build the query string from the route
-  const query = new URLSearchParams(route.query).toString();
+async function fetchFilteredProducts() {
+  // Build the query string from the current route.query
+  const query = new URLSearchParams(
+    Object.entries(route.query).reduce((acc, [key, value]) => {
+      if (Array.isArray(value)) {
+        acc[key] = value[0] ?? ""; // Take the first array element, if any
+      } else {
+        acc[key] = value?.toString() ?? ""; // Handle null/undefined
+      }
+      return acc;
+    }, {} as Record<string, string>)
+  ).toString();
 
-  // Fetch products from the backend using the query string
-  // Replace `/api/products` with your backend URL
-  const response = await fetch(`/api/products?${query}`);
-  const data = await response.json();
-
-  products.value = data; // Assume the backend returns a list of products
-};
+  // Fetch products from the backend using the built query string
+  const { getProductsData } = await getProducts(query); // Your API request logic
+  products.value = getProductsData.value as productType[]; // Assume the backend returns a list of products
+}
 
 // Watch for changes in the route to refetch filtered products
 watch(route, () => {
-  fetchFilteredProducts();
+  updateFilters();
 });
 
 // Load initial products on component mount
 onMounted(() => {
-  fetchFilteredProducts();
+  updateFilters();
 });
 
 //---------------------
@@ -75,12 +76,11 @@ const {
 } = await useAsyncData("categories", () =>
   $fetch(`https://api.escuelajs.co/api/v1/categories`)
 );
-const selectedCategory = ref<CategoryType>({} as CategoryType);
-categories.value = categoryData.value as CategoryType[];
-
-//fetch products
-const { getProductsData } = await getProducts();
-products.value = getProductsData.value as productType[];
+const categoryRes = categoryData.value as GetCategoryRes[];
+categories.value = categoryRes.map((item) => {
+  return { id: item.id, label: item.name, avatar: { src: item.image } };
+});
+// categories.value = categoryData.value as CategoryType[];
 </script>
 
 <template>
@@ -94,6 +94,7 @@ products.value = getProductsData.value as productType[];
             <div class="input-group">
               <input
                 type="text"
+                v-model="filters.title"
                 class="form-control"
                 placeholder="product name"
                 aria-label="product name"
@@ -103,6 +104,7 @@ products.value = getProductsData.value as productType[];
                 class="btn btn-outline-secondary"
                 type="button"
                 id="button-addon2"
+                @click="updateFilters"
               >
                 <i class="bi bi-search"></i>
               </button>
@@ -113,27 +115,37 @@ products.value = getProductsData.value as productType[];
             <USelectMenu
               v-model="selectedCategory"
               :options="categories"
-              placeholder="select a category"
-              icon=""
-              :name="selectedCategory.name"
+              class="ml-5 mr-5"
             >
               <template #leading>
-                <UAvatar :src="selectedCategory.image" size="sm" alt="avatar" />
-              </template>
-              <template #label>
-                <span
-                  v-if="selectedCategory.name"
-                  class="truncate text-black ml-3"
-                  >{{ selectedCategory.name }}</span
-                >
-                <span v-else>Select category</span>
+                <UAvatar
+                  v-bind="(selectedCategory.avatar as Avatar)"
+                  size="xs"
+                />
               </template>
             </USelectMenu>
           </div>
           <!-- price range inputs -->
-          <div class="col-12 flex align-middle justify-between gap-2">
-            <UInput placeholder="min price" type="number" icon="bi bi-cash" />
-            <UInput placeholder="max price" type="number" icon="bi bi-cash" />
+          <div class="row col-12 flex gap-2">
+            <div class="col-6">
+              <UInput
+                placeholder="min price"
+                v-model="filters.price_min"
+                type="number"
+                icon="bi bi-cash"
+              />
+            </div>
+            <div class="col-6">
+              <UInput
+                placeholder="max price"
+                v-model="filters.price_max"
+                type="number"
+                icon="bi bi-cash"
+              />
+            </div>
+            <div>
+              <UButton @click="updateFilters">filter price</UButton>
+            </div>
           </div>
         </div>
       </div>

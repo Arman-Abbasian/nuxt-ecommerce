@@ -1,4 +1,4 @@
-export async function getProducts() {
+export async function getProducts(query: string) {
   const {
     data: getProductsData,
     status: getProductsStatus,
@@ -6,7 +6,7 @@ export async function getProducts() {
     refresh: getProductsRefresh,
     clear: getProductsClear,
   } = await useAsyncData("products", () =>
-    $fetch("https://api.escuelajs.co/api/v1/products")
+    $fetch(`https://api.escuelajs.co/api/v1/products?${query}`)
   );
   return {
     getProductsData,
