@@ -38,7 +38,7 @@ const handleSubmit = async () => {
         body: formData,
       })
     );
-    console.log({ data, error: error.value.data.error });
+    console.log({ data, error: error.data });
   }
 };
 </script>
@@ -84,6 +84,6 @@ const handleSubmit = async () => {
 
 <style scoped>
 .container {
-  max-width: 500px;
+  max-width: 700px;
 }
 </style>
