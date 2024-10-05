@@ -120,12 +120,16 @@ categories.value = categoryRes.map((item) => {
               v-model="selectedCategory"
               :options="categories"
               searchable
+              placeholder="Select a category"
             >
               <template #leading>
                 <UAvatar
                   v-bind="(selectedCategory.avatar as Avatar)"
                   size="xs"
                 />
+              </template>
+              <template #option-empty="{ query }">
+                <q>{{ query }}</q> not found
               </template>
             </USelectMenu>
           </div>
