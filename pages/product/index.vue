@@ -11,10 +11,10 @@ const products = ref<productType[]>([]);
 const categories = ref<CategoryType[]>([]);
 const selectedCategory = ref<CategoryType>({} as CategoryType);
 
-console.log(categories.value);
+console.log(selectedCategory);
 const filters = reactive<FilterOptionsTypes>({
   title: "",
-  categoryId: null,
+  categoryId: selectedCategory?.value.id,
   price_min: 0,
   price_max: 0,
 });
@@ -59,6 +59,10 @@ async function fetchFilteredProducts() {
 
 // Watch for changes in the route to refetch filtered products
 watch(route, () => {
+  updateFilters();
+});
+watch(selectedCategory, () => {
+  filters.categoryId = selectedCategory.value?.id;
   updateFilters();
 });
 
@@ -115,7 +119,7 @@ categories.value = categoryRes.map((item) => {
             <USelectMenu
               v-model="selectedCategory"
               :options="categories"
-              class="ml-5 mr-5"
+              searchable
             >
               <template #leading>
                 <UAvatar

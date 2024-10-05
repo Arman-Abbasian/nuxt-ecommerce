@@ -1,31 +1,20 @@
 <script setup lang="ts">
-const state = ref({
-  email: "",
-  password: "",
-});
+import { ref } from "vue";
 
-async function onSubmit() {
-  console.log(state);
-}
+const selectedOption = ref("");
+console.log(selectedOption);
 </script>
 
 <template>
-  <UCard>
-    <UForm :state="state" class="space-y-4" @submit="onSubmit">
-      <UFormGroup label="Email" name="email">
-        <UInput
-          type="text"
-          v-model="state.email"
-          placeholder="email"
-          class="text-slate-700"
-        />
-      </UFormGroup>
-
-      <UFormGroup label="Password" name="password">
-        <UInput type="text" v-model="state.password" placeholder="password" />
-      </UFormGroup>
-
-      <UButton type="submit"> Submit </UButton>
-    </UForm>
-  </UCard>
+  <div>
+    <label for="category">Choose a category:</label>
+    <select id="category" v-model="selectedOption">
+      <option value="" disabled>Select a category</option>
+      <option value="technology">Technology</option>
+      <option value="health">Health</option>
+      <option value="finance">Finance</option>
+      <option value="education">Education</option>
+    </select>
+    <p>Selected option: {{ selectedOption }}</p>
+  </div>
 </template>
