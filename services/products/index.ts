@@ -5,7 +5,7 @@ export async function getProducts(query: string) {
     error: getProductsError,
     refresh: getProductsRefresh,
     clear: getProductsClear,
-  } = await useAsyncData("products", () =>
+  } = await useAsyncData("getProducts", () =>
     $fetch(`https://api.escuelajs.co/api/v1/products?${query}`)
   );
   return {
@@ -14,5 +14,24 @@ export async function getProducts(query: string) {
     getProductsError,
     getProductsRefresh,
     getProductsClear,
+  };
+}
+
+export async function getProduct(param: string) {
+  const {
+    data: getProductData,
+    status: getProductStatus,
+    error: getProductError,
+    refresh: getProductRefresh,
+    clear: getProductClear,
+  } = await useAsyncData("getProduct", () =>
+    $fetch(`https://api.escuelajs.co/api/v1/products/${param}`)
+  );
+  return {
+    getProductData,
+    getProductStatus,
+    getProductError,
+    getProductRefresh,
+    getProductClear,
   };
 }

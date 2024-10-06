@@ -1,7 +1,7 @@
 export interface CategoryType {
   id: number;
   label: string;
-  image: { src: string };
+  avatar: { src: string };
 }
 export interface GetCategoryRes {
   creationAt: string;
