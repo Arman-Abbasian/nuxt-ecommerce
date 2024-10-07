@@ -27,13 +27,14 @@ const route = useRoute();
 const product = ref();
 const productId = route.params.id as string;
 const { getProductData } = await getProduct(productId);
-console.log(getProductData.value);
-product.value = getProductData.value;
-console.log(product.value);
+console.log(getProductData?.value);
+product.value = getProductData?.value;
+console.log(product?.value);
 </script>
 
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" v-if="product.value.title">
+    <!-- main swiper section -->
     <swiper
       :style="{
         '--swiper-navigation-color': '#fff',
@@ -76,6 +77,7 @@ console.log(product.value);
         ><img src="https://swiperjs.com/demos/images/nature-10.jpg"
       /></swiper-slide>
     </swiper>
+    <!-- thumb swiper section -->
     <swiper
       @swiper="setThumbsSwiper"
       :spaceBetween="10"
@@ -117,21 +119,25 @@ console.log(product.value);
       /></swiper-slide>
     </swiper>
   </div>
+  <div v-if="product.value.title">
+    <h1>{{ product.value.title }}</h1>
+    <h2>{{ product.value.price }}</h2>
+    <h3>{{ product.value.category }}</h3>
+    <p>{{ product.value.description }}</p>
+    <button>add to basket</button>
+  </div>
 </template>
 <style scoped>
 .swiper-container {
-  display: flex;
   height: 500px; /* Adjust the height as needed */
+  width: 50%;
 }
-
 .mainSwiper {
-  flex: 3;
+  height: 70%;
+  width: 100%;
 }
-
 .thumbSwiper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  height: 30%;
+  width: 100%;
 }
 </style>
