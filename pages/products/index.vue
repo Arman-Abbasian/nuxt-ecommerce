@@ -176,7 +176,11 @@ categories.value = categoryRes.map((item) => {
               <p class="card-text">{{ truncateText(product.description) }}</p>
               <p>price: {{ product.price }}$</p>
               <div class="d-flex justify-content-between">
-                <NuxtLink to="#" class="btn btn-primary">more...</NuxtLink>
+                <NuxtLink
+                  :to="`/products/${product.id}`"
+                  class="btn btn-primary"
+                  >more...</NuxtLink
+                >
                 <NuxtLink to="#" class="btn btn-primary">add to cart</NuxtLink>
               </div>
             </div>
