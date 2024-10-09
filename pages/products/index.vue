@@ -11,7 +11,6 @@ const products = ref<productType[]>([]);
 const categories = ref<CategoryType[]>([]);
 const selectedCategory = ref<CategoryType>({} as CategoryType);
 
-console.log(selectedCategory);
 const filters = reactive<FilterOptionsTypes>({
   title: "",
   categoryId: selectedCategory?.value.id,

@@ -15,6 +15,11 @@ import "swiper/css/thumbs";
 
 // import required modules
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { checkUser } from "~/services/auth";
+
+const { checkUserData, checkUserError } = await checkUser();
+
+console.log(checkUserData);
 
 const thumbsSwiper = ref(null);
 const modules = [FreeMode, Navigation, Thumbs];
@@ -27,9 +32,7 @@ const route = useRoute();
 const product = ref();
 const productId = route.params.id as string;
 const { getProductData } = await getProduct(productId);
-console.log(getProductData?.value);
 product.value = getProductData?.value;
-console.log(product?.value);
 </script>
 
 <template>
