@@ -19,8 +19,6 @@ import { checkUser } from "~/services/auth";
 
 const { checkUserData, checkUserError } = await checkUser();
 
-console.log(checkUserData);
-
 const thumbsSwiper = ref(null);
 const modules = [FreeMode, Navigation, Thumbs];
 const setThumbsSwiper = (swiper: any) => {
