@@ -12,7 +12,5 @@ export default defineNuxtConfig({
   devServer: {
     port: 5000,
   },
-
-  app: {},
-  css: ["~/assets/css/main.css", "bootstrap-icons/font/bootstrap-icons.css"],
+  css: ["~/assets/css/main.css"],
 });

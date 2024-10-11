@@ -13,6 +13,6 @@ const items = [
     class="w-[calc(100vw-2rem)] mx-auto rounded-lg overflow-hidden h-[calc(100vh-6rem)]"
     indicators
   >
-    <img :src="item" class="w-full" draggable="false" />
+    <img :src="item" class="w-full object-center" draggable="true" />
   </UCarousel>
 </template>

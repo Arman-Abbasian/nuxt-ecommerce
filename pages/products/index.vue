@@ -88,9 +88,9 @@ categories.value = categoryRes.map((item) => {
 
 <template>
   <div class="container-xxl h-screen">
-    <div class="row g-5 h-full">
+    <div class="flex flex-col md:flex-row gap-4">
       <!-- filter section -->
-      <div class="col-md-3 bg-primary">
+      <div class="w-full md:w-1/4 p-4 bg-blue-100">
         <div class="row gap-4">
           <!-- search title -->
           <div class="col-6 col-sm-12">
@@ -157,33 +157,56 @@ categories.value = categoryRes.map((item) => {
         </div>
       </div>
       <!-- products section -->
-      <div class="col-md-9 bg-success h-full overflow-auto">
-        <div class="row justify-content-center g-3 pt-2">
-          <div
+      <div class="w-full md:w-3/4 h-full overflow-auto bg-red-200 p-4">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 md:gap-8 bg-teal-300"
+        >
+          <UCard
             v-for="product in products"
             :key="product.id"
-            class="card col-sm-6 col-md-4"
-            style="width: 25rem"
+            class="max-w-[19rem] mx-auto flex flex-col justify-between"
           >
-            <img
-              :src="product.images[0]"
-              class="card-img-top"
-              :alt="product.title"
-            />
-            <div class="card-body d-flex flex-column justify-content-between">
-              <h5 class="card-title">{{ product.title }}</h5>
-              <p class="card-text">{{ truncateText(product.description) }}</p>
-              <p>price: {{ product.price }}$</p>
-              <div class="d-flex justify-content-between">
-                <NuxtLink
-                  :to="`/products/${product.id}`"
-                  class="btn btn-primary"
-                  >more...</NuxtLink
-                >
-                <NuxtLink to="#" class="btn btn-primary">add to cart</NuxtLink>
+            <template #header>
+              <div class="h-72 overflow-hidden rounded-t-lg">
+                <img
+                  :src="product.images[0]"
+                  class="w-full h-full overflow-hidden object-cover rounded-t-lg"
+                  :alt="product.title"
+                />
               </div>
+            </template>
+
+            <div class="h-20">
+              <h5 class="card-title text-nowrap overflow-clip text-ellipsis">
+                {{ product.title }}
+              </h5>
+              <p class="card-text text-nowrap overflow-clip text-ellipsis">
+                {{ product.description }}
+              </p>
+              <p class="text-nowrap overflow-clip text-ellipsis">
+                price: {{ product.price }}$
+              </p>
             </div>
-          </div>
+
+            <template #footer>
+              <div class="flex justify-between items-center h-8 px-2">
+                <UButton
+                  :to="`/products/${product.id}`"
+                  target="_blank"
+                  label="Details"
+                  icon="i-material-symbols-visibility-outline"
+                />
+                <UButton
+                  icon="material-symbols-light-add-shopping-cart"
+                  size="sm"
+                  color="primary"
+                  variant="solid"
+                  label="Add to Cart"
+                  :trailing="false"
+                />
+              </div>
+            </template>
+          </UCard>
         </div>
       </div>
     </div>
