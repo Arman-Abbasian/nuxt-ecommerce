@@ -10,6 +10,7 @@ import type { Avatar } from "#ui/types";
 const products = ref<productType[]>([]);
 const categories = ref<CategoryType[]>([]);
 const selectedCategory = ref<CategoryType>({} as CategoryType);
+const basket = reactive([] as productType[]);
 
 const filters = reactive<FilterOptionsTypes>({
   title: "",
@@ -60,14 +61,23 @@ async function fetchFilteredProducts() {
 watch(route, () => {
   updateFilters();
 });
+watch(basket, () => {
+  localStorage.setItem("basket", JSON.stringify(basket));
+});
 watch(selectedCategory, () => {
   filters.categoryId = selectedCategory.value?.id;
   updateFilters();
 });
-
+const addLocalStorageBasketItemsToBasketReactive = () => {
+  const localStorageBasket: productType[] = JSON.parse(
+    localStorage.getItem("basket") || "[]"
+  );
+  basket.push(...localStorageBasket);
+};
 // Load initial products on component mount
 onMounted(() => {
   updateFilters();
+  if (process.client) addLocalStorageBasketItemsToBasketReactive();
 });
 
 //---------------------
@@ -80,41 +90,49 @@ const {
   $fetch(`https://api.escuelajs.co/api/v1/categories`)
 );
 const categoryRes = categoryData.value as GetCategoryRes[];
-categories.value = categoryRes.map((item) => {
+categories.value = categoryRes?.map((item) => {
   return { id: item.id, label: item.name, avatar: { src: item.image } };
 });
-// categories.value = categoryData.value as CategoryType[];
+const addToBasketHandler = (product: productType) => {
+  basket.push(product);
+};
+const isInBasket = (productId: number): boolean => {
+  if (process.client) {
+    return basket.some((product) => product.id === productId);
+  }
+  return false;
+};
 </script>
 
 <template>
-  <div class="container-xxl h-screen">
-    <div class="flex flex-col md:flex-row gap-4">
+  <div class="container-xxl h-[calc(100vh-6rem)]">
+    <div class="flex flex-col md:flex-row gap-4 h-full">
       <!-- filter section -->
-      <div class="w-full md:w-1/4 p-4 bg-blue-100">
-        <div class="row gap-4">
+      <div class="w-full md:h-full md:w-1/5 p-4">
+        <div class="flex flex-col gap-4">
           <!-- search title -->
-          <div class="col-6 col-sm-12">
-            <div class="input-group">
-              <input
-                type="text"
-                v-model="filters.title"
-                class="form-control"
-                placeholder="product name"
-                aria-label="product name"
-                aria-describedby="button-addon"
-              />
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                id="button-addon2"
-                @click="updateFilters"
-              >
-                <i class="bi bi-search"></i>
-              </button>
-            </div>
+          <div class="w-60">
+            <UInput
+              v-model="filters.title"
+              name="title"
+              placeholder="Search..."
+              autocomplete="off"
+              :ui="{ icon: { trailing: { pointer: '' } } }"
+            >
+              <template #trailing>
+                <UButton
+                  color="teal"
+                  class="cursor-pointer"
+                  variant="link"
+                  icon="material-symbols-search-rounded"
+                  :padded="false"
+                  @click="updateFilters()"
+                />
+              </template>
+            </UInput>
           </div>
           <!-- category select -->
-          <div class="col-6 col-sm-12">
+          <div class="w-60">
             <USelectMenu
               v-model="selectedCategory"
               :options="categories"
@@ -133,34 +151,38 @@ categories.value = categoryRes.map((item) => {
             </USelectMenu>
           </div>
           <!-- price range inputs -->
-          <div class="row col-12 flex gap-2">
-            <div class="col-6">
+          <div class="w-full flex items-center gap-2">
+            <div>
               <UInput
                 placeholder="min price"
                 v-model="filters.price_min"
                 type="number"
-                icon="bi bi-cash"
+                icon="material-symbols-attach-money-rounded"
+                class="w-24"
               />
             </div>
-            <div class="col-6">
+            <div>
               <UInput
                 placeholder="max price"
                 v-model="filters.price_max"
                 type="number"
-                icon="bi bi-cash"
+                icon="material-symbols-attach-money-rounded"
+                class="w-24"
               />
             </div>
             <div>
-              <UButton @click="updateFilters">filter price</UButton>
+              <UButton
+                @click="updateFilters"
+                icon="material-symbols-attach-money"
+                >filter</UButton
+              >
             </div>
           </div>
         </div>
       </div>
       <!-- products section -->
-      <div class="w-full md:w-3/4 h-full overflow-auto bg-red-200 p-4">
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 md:gap-8 bg-teal-300"
-        >
+      <div class="w-full md:h-full overflow-auto md:w-4/5 h-full p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 md:gap-8">
           <UCard
             v-for="product in products"
             :key="product.id"
@@ -199,10 +221,12 @@ categories.value = categoryRes.map((item) => {
                 <UButton
                   icon="material-symbols-light-add-shopping-cart"
                   size="sm"
+                  :disabled="isInBasket(product.id)"
                   color="primary"
                   variant="solid"
-                  label="Add to Cart"
+                  :label="isInBasket(product.id) ? 'Added' : 'Add to Cart'"
                   :trailing="false"
+                  @click="addToBasketHandler(product)"
                 />
               </div>
             </template>
