@@ -111,7 +111,7 @@ const isInBasket = (productId: number): boolean => {
       <div class="w-full md:h-full md:w-1/5 p-4">
         <div class="flex flex-col gap-4">
           <!-- search title -->
-          <div class="w-60">
+          <div class="w-44">
             <UInput
               v-model="filters.title"
               name="title"
@@ -132,7 +132,7 @@ const isInBasket = (productId: number): boolean => {
             </UInput>
           </div>
           <!-- category select -->
-          <div class="w-60">
+          <div class="w-44">
             <USelectMenu
               v-model="selectedCategory"
               :options="categories"
