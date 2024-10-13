@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import type { basketType } from "~/types/basket";
 import type { productType } from "~/types/product";
 
-const basket = reactive<productType[]>([]);
+const basket = reactive<basketType[]>([]);
 onMounted(() => {
-  const localStorageBasket: productType[] = JSON.parse(
+  const localStorageBasket: basketType[] = JSON.parse(
     localStorage.getItem("basket") || "[]"
   );
   console.log(localStorageBasket);
@@ -21,10 +22,10 @@ console.log(basket);
         </div>
         <div class="flex flex-col gap-2">
           <h1>{{ item.title }}</h1>
-          <p>{{ item.price }}</p>
+          <p>{{ item.totalPrice }} $</p>
           <div class="flex items-center gap-2">
             <p>-</p>
-            <p>1</p>
+            <p>{{ item.quantity }}</p>
             <p>+</p>
           </div>
         </div>

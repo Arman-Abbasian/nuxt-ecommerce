@@ -5,12 +5,13 @@ import { truncateText } from "~/utils/stringFUnc";
 import { getProducts } from "~/services/products";
 import { useRouter, useRoute } from "vue-router";
 import type { Avatar } from "#ui/types";
+import type { basketType } from "~/types/basket";
 
 //---------------------
 const products = ref<productType[]>([]);
 const categories = ref<CategoryType[]>([]);
 const selectedCategory = ref<CategoryType>({} as CategoryType);
-const basket = reactive([] as productType[]);
+const basket = reactive([] as basketType[]);
 
 const filters = reactive<FilterOptionsTypes>({
   title: "",
@@ -69,7 +70,7 @@ watch(selectedCategory, () => {
   updateFilters();
 });
 const addLocalStorageBasketItemsToBasketReactive = () => {
-  const localStorageBasket: productType[] = JSON.parse(
+  const localStorageBasket: basketType[] = JSON.parse(
     localStorage.getItem("basket") || "[]"
   );
   basket.push(...localStorageBasket);
@@ -94,11 +95,19 @@ categories.value = categoryRes?.map((item) => {
   return { id: item.id, label: item.name, avatar: { src: item.image } };
 });
 const addToBasketHandler = (product: productType) => {
-  basket.push(product);
+  basket.push({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    description: product.description,
+    images: product.images,
+    quantity: 1,
+    totalPrice: product.price,
+  });
 };
 const isInBasket = (productId: number): boolean => {
   if (process.client) {
-    return basket.some((product) => product.id === productId);
+    return basket.some((product: basketType) => product.id === productId);
   }
   return false;
 };
