@@ -44,14 +44,17 @@ function reduceQuantity(id: number) {
           <div class="flex items-center gap-2">
             <UButton
               class="w-6 h-6 rounded-sm bg-red-500 flex justify-center items-center"
-              :label="item.quantity > 0 ? '-' : 'delete'"
               @click="reduceQuantity(item.id)"
+              :icon="
+                item.quantity > 1
+                  ? 'material-symbols-remove'
+                  : 'material-symbols-delete'
+              "
             />
-
             <p>{{ item.quantity }}</p>
             <UButton
               class="w-6 h-6 rounded-sm bg-teal-500 flex justify-center items-center"
-              label="+"
+              icon="material-symbols-add"
               @click="addQuantity(item.id)"
             />
           </div>
@@ -71,12 +74,8 @@ function reduceQuantity(id: number) {
           <h3>tax:</h3>
           <p class="font-bold text-red-700">1200$</p>
         </div>
-        <div class="flex items-center gap-5">
-          <h3>delivery:</h3>
-          <p class="font-bold text-red-700">1200$</p>
-        </div>
         <div class="flex items-center gap-2">
-          <h3>discount:</h3>
+          <h3>discount of products:</h3>
           <p class="font-bold text-teal-800">- 1200$</p>
         </div>
         <hr />
