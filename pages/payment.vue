@@ -1,48 +1,117 @@
-<script lang="ts">
-import { UInput } from "#build/components";
+<script setup lang="ts">
+import { z } from "zod";
+
+type StateType = {
+  name: string;
+  active: boolean;
+  bg: string;
+};
+const states: StateType[] = [
+  { name: "Baden-Württemberg", active: true, bg: "red" },
+  { name: "Bavaria", active: true, bg: "green" },
+  { name: "Berlin", active: true, bg: "blue" },
+  { name: "Brandenburg", active: true, bg: "yellow" },
+  { name: "Bremen", active: true, bg: "green" },
+  { name: "Hamburg", active: true, bg: "blue" },
+  { name: "Hesse", active: true, bg: "red" },
+  { name: "Lower Saxony", active: true, bg: "yellow" },
+  { name: "Mecklenburg-Vorpommern", active: true, bg: "green" },
+  { name: "North Rhine-Westphalia", active: true, bg: "blue" },
+];
+
+type PayementType = {
+  name: string;
+  lastname: string;
+  state: StateType;
+  address: string;
+};
+const recipientForm: PayementType = reactive({
+  name: "",
+  lastname: "",
+  state: {} as StateType,
+  address: "",
+});
+const discountCodee = ref("");
+
+const schema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Must be at least 8 characters"),
+});
+
+const onSubmit = () => {
+  console.log("Form submitted:", recipientForm);
+};
+const discounCodeHandler = () => {
+  alert("code is not valid");
+};
 </script>
+
 <template>
-  <!-- total payment -->
-  <h2>subtotal: 1200$</h2>
-  <!-- discount code -->
-  <UInput />
-  <!-- user data -->
-  <div>
-    <template>
-      <UFormGroup
-        label="Email"
-        :error="!email && 'You must enter an email'"
-        help="This is a nice email!"
+  <div class="max-w-md mx-auto">
+    <div class="flex justify-between items-center">
+      <!-- total payment -->
+      <h2>subtotal: 1200$</h2>
+      <!-- discount code -->
+      <UInput
+        v-model="discountCodee"
+        name="q"
+        class="p-2 max-w-64"
+        placeholder="Enter discount code here ..."
+        autocomplete="off"
+        :ui="{ icon: { trailing: { pointer: '' } } }"
       >
-        <template #default="{ error }">
-          <UInput
-            v-model="email"
-            type="email"
-            placeholder="Enter email"
-            :trailing-icon="
-              error ? 'i-heroicons-exclamation-triangle-20-solid' : undefined
-            "
+        <template #trailing>
+          <UButton
+            color="white"
+            variant="link"
+            :padded="false"
+            icon="material-symbols:touch-app-outline"
+            class="bg-blue-500 py-1 px-2"
+            @click="discounCodeHandler"
           />
         </template>
-
-        <template #error="{ error }">
-          <span
-            :class="[
-              error
-                ? 'text-red-500 dark:text-red-400'
-                : 'text-primary-500 dark:text-primary-400',
-            ]"
-          >
-            {{ error ? error : "Your email is valid" }}
-          </span>
-        </template>
-      </UFormGroup>
+      </UInput>
+    </div>
+    <!-- Recipient data -->
+    <template>
+      <UForm :state="recipientForm" class="space-y-4" @submit="onSubmit">
+        <UFormGroup label="Name" name="name">
+          <UInput v-model="recipientForm.name" />
+        </UFormGroup>
+        <UFormGroup label="Lastname" name="lastname">
+          <UInput v-model="recipientForm.lastname" />
+        </UFormGroup>
+        <p>country: Germany</p>
+        <USelectMenu
+          v-model="recipientForm.state"
+          :options="states"
+          option-attribute="name"
+          placeholder="select a state"
+          searchable
+          searchable-placeholder="search the state"
+        >
+          <template #option="{ option: states }">
+            <span
+              :class="[
+                `bg-${states.bg}-400 inline-block h-2 w-2 flex-shrink-0 rounded-full`,
+              ]"
+              aria-hidden="true"
+            />
+            <span class="truncate">{{ states.name }}</span>
+          </template>
+        </USelectMenu>
+        <UFormGroup label="Address" name="address">
+          <UInput v-model="recipientForm.address" />
+        </UFormGroup>
+        <UButton type="submit">Submit</UButton>
+      </UForm>
+      <UButton type="submit"> Submit </UButton>
     </template>
+    <!-- delivery type -->
+    <div></div>
+    <!-- payment type -->
+    <div></div>
+    <!-- payment button -->
+    <div></div>
   </div>
-  <!-- delivery type -->
-  <div></div>
-  <!-- payment type -->
-  <div></div>
-  <!-- payment button -->
-  <div></div>
 </template>
