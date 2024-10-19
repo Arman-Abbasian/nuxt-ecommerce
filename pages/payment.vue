@@ -24,13 +24,47 @@ type PayementType = {
   lastname: string;
   state: StateType;
   address: string;
+  shipping: "express" | "normal";
+  payment: "paypal" | "mastercard" | "bitpay" | "visa";
 };
 const recipientForm: PayementType = reactive({
   name: "",
   lastname: "",
   state: {} as StateType,
   address: "",
+  shipping: "normal",
+  payment: "paypal",
 });
+
+const shippingOptions = [
+  {
+    value: "normal",
+    label: "Normal",
+  },
+  {
+    value: "express",
+    label: "Express",
+  },
+];
+const paymentOptions = [
+  {
+    value: "paypal",
+    label: "/images/paymentMethods/paypal.png",
+  },
+  {
+    value: "mastercard",
+    label: "/images/paymentMethods/mastercard.png",
+  },
+  {
+    value: "visa",
+    label: "/images/paymentMethods/visa.png",
+  },
+  {
+    value: "bitpay",
+    label: "/images/paymentMethods/bitpay.png",
+  },
+];
+
 const discountCodee = ref("");
 
 const schema = z.object({
@@ -103,9 +137,22 @@ const discounCodeHandler = () => {
         <UFormGroup label="Address" name="address">
           <UInput v-model="recipientForm.address" />
         </UFormGroup>
-        <UButton type="submit">Submit</UButton>
+        <URadioGroup
+          v-model="recipientForm.shipping"
+          legend="Choose shipping options"
+          :options="shippingOptions"
+        />
+        <URadioGroup
+          v-model="recipientForm.payment"
+          :options="paymentOptions"
+          class="flex flex-row items-center gap-2"
+        >
+          <template #label="{ option }">
+            <img :src="option.label" class="w-16 h-8" />
+          </template>
+        </URadioGroup>
+        <UButton type="submit">payment : 1200$</UButton>
       </UForm>
-      <UButton type="submit"> Submit </UButton>
     </template>
     <!-- delivery type -->
     <div></div>
