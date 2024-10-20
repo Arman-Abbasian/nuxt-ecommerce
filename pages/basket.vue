@@ -29,6 +29,20 @@ function reduceQuantity(id: number) {
     localStorage.setItem("basket", JSON.stringify(basket));
   }
 }
+
+const totalPrice: ComputedRef<number> = computed(() => {
+  return basket.reduce(
+    (accumulator, currentValue) =>
+      accumulator + currentValue.price * currentValue.quantity,
+    0
+  );
+});
+const tax: ComputedRef<number> = computed(() => {
+  return (10 / 100) * totalPrice.value;
+});
+const subtotal: ComputedRef<number> = computed(() => {
+  return totalPrice.value + tax.value;
+});
 </script>
 <template>
   <div class="flex flex-col md:flex-row w-[calc(100vw-2rem)] mx-auto gap-4">
@@ -68,20 +82,20 @@ function reduceQuantity(id: number) {
       >
         <div class="flex items-center gap-2">
           <h3>cart total:</h3>
-          <p class="font-bold">1200$</p>
+          <p class="font-bold">{{ totalPrice }}$</p>
         </div>
         <div class="flex items-center gap-2">
           <h3>tax:</h3>
-          <p class="font-bold text-red-700">1200$</p>
+          <p class="font-bold text-red-700">{{ tax }}$</p>
         </div>
         <div class="flex items-center gap-2">
           <h3>discount of products:</h3>
-          <p class="font-bold text-teal-800">- 1200$</p>
+          <p class="font-bold text-teal-800">0 $</p>
         </div>
         <hr />
         <div class="flex items-center gap-2 mt-4">
           <h2>subtotal:</h2>
-          <p class="font-bold text-2xl">1200$</p>
+          <p class="font-bold text-2xl">{{ subtotal }}$</p>
         </div>
         <UButton>checkout</UButton>
       </div>

@@ -137,11 +137,13 @@ const discounCodeHandler = () => {
         <UFormGroup label="Address" name="address">
           <UInput v-model="recipientForm.address" />
         </UFormGroup>
+        <!-- delivery type -->
         <URadioGroup
           v-model="recipientForm.shipping"
           legend="Choose shipping options"
           :options="shippingOptions"
         />
+        <!-- payment type -->
         <URadioGroup
           v-model="recipientForm.payment"
           :options="paymentOptions"
@@ -154,11 +156,5 @@ const discounCodeHandler = () => {
         <UButton type="submit">payment : 1200$</UButton>
       </UForm>
     </template>
-    <!-- delivery type -->
-    <div></div>
-    <!-- payment type -->
-    <div></div>
-    <!-- payment button -->
-    <div></div>
   </div>
 </template>
