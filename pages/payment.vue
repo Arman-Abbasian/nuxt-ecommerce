@@ -109,31 +109,36 @@ const discounCodeHandler = () => {
     <!-- Recipient data -->
     <template>
       <UForm :state="recipientForm" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Name" name="name">
-          <UInput v-model="recipientForm.name" />
-        </UFormGroup>
-        <UFormGroup label="Lastname" name="lastname">
-          <UInput v-model="recipientForm.lastname" />
-        </UFormGroup>
-        <p>country: Germany</p>
-        <USelectMenu
-          v-model="recipientForm.state"
-          :options="states"
-          option-attribute="name"
-          placeholder="select a state"
-          searchable
-          searchable-placeholder="search the state"
-        >
-          <template #option="{ option: states }">
-            <span
-              :class="[
-                `bg-${states.bg}-400 inline-block h-2 w-2 flex-shrink-0 rounded-full`,
-              ]"
-              aria-hidden="true"
-            />
-            <span class="truncate">{{ states.name }}</span>
-          </template>
-        </USelectMenu>
+        <div class="flex justify-between items-center">
+          <UFormGroup label="Name" name="name">
+            <UInput v-model="recipientForm.name" />
+          </UFormGroup>
+          <UFormGroup label="Lastname" name="lastname">
+            <UInput v-model="recipientForm.lastname" />
+          </UFormGroup>
+        </div>
+        <div class="flex gap-4 items-center">
+          <img src="/images/flags/germany-flag.png" class="w-12 rounded-md" />
+          <USelectMenu
+            v-model="recipientForm.state"
+            :options="states"
+            option-attribute="name"
+            placeholder="select a state"
+            searchable
+            searchable-placeholder="search the state"
+            class="flex-1"
+          >
+            <template #option="{ option: states }">
+              <span
+                :class="[
+                  `bg-${states.bg}-400 inline-block h-2 w-2 flex-shrink-0 rounded-full`,
+                ]"
+                aria-hidden="true"
+              />
+              <span class="truncate">{{ states.name }}</span>
+            </template>
+          </USelectMenu>
+        </div>
         <UFormGroup label="Address" name="address">
           <UInput v-model="recipientForm.address" />
         </UFormGroup>
@@ -142,18 +147,22 @@ const discounCodeHandler = () => {
           v-model="recipientForm.shipping"
           legend="Choose shipping options"
           :options="shippingOptions"
+          :ui="{ fieldset: 'flex gap-4 items-center' }"
         />
         <!-- payment type -->
         <URadioGroup
           v-model="recipientForm.payment"
           :options="paymentOptions"
           class="flex flex-row items-center gap-2"
+          :ui="{ fieldset: 'flex gap-4 items-center' }"
         >
           <template #label="{ option }">
             <img :src="option.label" class="w-16 h-8" />
           </template>
         </URadioGroup>
-        <UButton type="submit">payment : 1200$</UButton>
+        <UButton type="submit" class="w-full flex justify-center items-center"
+          >pay: 1200$</UButton
+        >
       </UForm>
     </template>
   </div>
