@@ -97,7 +97,13 @@ const subtotal: ComputedRef<number> = computed(() => {
           <h2>subtotal:</h2>
           <p class="font-bold text-2xl">{{ subtotal }}$</p>
         </div>
-        <UButton>checkout</UButton>
+        <ULink
+          to="/payment"
+          active-class="text-primary"
+          inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+        >
+          Link
+        </ULink>
       </div>
     </div>
   </div>

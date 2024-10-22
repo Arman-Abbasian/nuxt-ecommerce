@@ -38,7 +38,6 @@ const handleSubmit = async () => {
         body: formData,
       })
     );
-    console.log({ data, error: error.data });
   }
 };
 </script>

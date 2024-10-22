@@ -1,3 +1,14 @@
+<script setup>
+import { ref } from "vue";
+import { checkUser } from "~/services/auth";
+
+// Replace with your actual logic for checking login status
+const isLoggedIn = ref(false); // Set to `true` if the user is logged in
+const username = ref("JohnDoe"); // Replace with the actual username
+const { checkUserData } = await checkUser();
+console.log(checkUserData.value);
+</script>
+
 <template>
   <header class="bg-white shadow-md p-4 h-16 mb-4">
     <div class="container mx-auto flex justify-between items-center">
@@ -27,11 +38,3 @@
     </div>
   </header>
 </template>
-
-<script setup>
-import { ref } from "vue";
-
-// Replace with your actual logic for checking login status
-const isLoggedIn = ref(false); // Set to `true` if the user is logged in
-const username = ref("JohnDoe"); // Replace with the actual username
-</script>

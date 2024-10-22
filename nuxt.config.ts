@@ -8,7 +8,6 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui"],
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-
   devServer: {
     port: 5000,
   },
