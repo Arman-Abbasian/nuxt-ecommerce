@@ -5,9 +5,7 @@ export async function checkUser() {
     error: checkUserError,
     refresh: checkUserRefresh,
     clear: checkUserClear,
-  } = await useAsyncData("checkUser", () =>
-    $fetch(`https://api.escuelajs.co/api/v1/auth/profile`)
-  );
+  } = await useAsyncData("checkUser", () => $fetch(`"/api/auth/checkUser`));
   return {
     checkUserData,
     checkUserStatus,

@@ -5,8 +5,15 @@ import { checkUser } from "~/services/auth";
 // Replace with your actual logic for checking login status
 const isLoggedIn = ref(false); // Set to `true` if the user is logged in
 const username = ref("JohnDoe"); // Replace with the actual username
-const { checkUserData } = await checkUser();
-console.log(checkUserData.value);
+watch(async () => {
+  //const { checkUserData } = await checkUser();
+
+  const { data, error } = await useAsyncData("login", () =>
+    $fetch("/api/auth/checkUser", {
+      method: "get",
+    })
+  );
+});
 </script>
 
 <template>
@@ -31,7 +38,10 @@ console.log(checkUserData.value);
       <!-- Right side: Login or Username -->
       <div>
         <span v-if="isLoggedIn" class="text-gray-800">{{ username }}</span>
-        <NuxtLink v-else to="/login" class="text-gray-800 hover:text-blue-500"
+        <NuxtLink
+          v-else
+          to="/auth/login"
+          class="text-gray-800 hover:text-blue-500"
           >Login</NuxtLink
         >
       </div>

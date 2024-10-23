@@ -5,16 +5,19 @@ type Response = {
 
 export default defineEventHandler(async (event) => {
   // Parse the incoming request body
-  const body = await readBody(event);
+  const cookies = parseCookies(event);
+  const accessToken = cookies?.access_token;
+  console.log("cookies", cookies);
+  return true;
 
   // Define the external server URL
-  const externalServerUrl = "https://api.escuelajs.co/api/v1/auth/login";
+  const externalServerUrl = "https://api.escuelajs.co/api/v1/auth/profile";
 
   const response: Response = await $fetch(externalServerUrl, {
-    method: "POST",
-    body,
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer {your access token}",
     },
   });
   // Extract tokens from the response
