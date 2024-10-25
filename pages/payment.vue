@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { z } from "zod";
-
+definePageMeta({
+  middleware: ["auth"],
+});
 type StateType = {
   name: string;
   active: boolean;

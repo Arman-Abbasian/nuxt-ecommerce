@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { basketType } from "~/types/basket";
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const basket = reactive<basketType[]>([]);
 onMounted(() => {
   const localStorageBasket: basketType[] = JSON.parse(

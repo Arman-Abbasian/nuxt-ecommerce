@@ -5,7 +5,7 @@ export async function checkUser() {
     error: checkUserError,
     refresh: checkUserRefresh,
     clear: checkUserClear,
-  } = await useAsyncData("checkUser", () => $fetch(`"/api/auth/checkUser`));
+  } = await useAsyncData("checkUser", () => $fetch(`/api/auth/checkUser`));
   return {
     checkUserData,
     checkUserStatus,

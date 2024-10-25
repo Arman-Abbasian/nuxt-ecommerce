@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
+import type { LoginType } from "~/types/login";
+import { useLogin } from "~/composable/login";
+
+definePageMeta({
+  middleware: ["login"],
+});
 
 const schema = z.object({
   email: z.string().email("Invalid email"),
@@ -9,18 +15,18 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>;
 
-const formData = reactive({
+const formData: LoginType = reactive({
   email: undefined,
   password: undefined,
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const { data, error } = await useAsyncData("login", () =>
-    $fetch("/api/auth/login", {
-      method: "post",
-      body: formData,
-    })
-  );
+  const { loginData, loginError } = await useLogin(formData);
+  if (loginData.value) {
+    navigateTo("/");
+  } else {
+    alert("login failed");
+  }
 }
 </script>
 
