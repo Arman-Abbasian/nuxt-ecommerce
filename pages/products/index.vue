@@ -160,24 +160,26 @@ const isInBasket = (productId: number): boolean => {
             </USelectMenu>
           </div>
           <!-- price range inputs -->
-          <div class="w-full flex items-center gap-2">
-            <div>
-              <UInput
-                placeholder="min price"
-                v-model="filters.price_min"
-                type="number"
-                icon="material-symbols-attach-money-rounded"
-                class="w-24"
-              />
-            </div>
-            <div>
-              <UInput
-                placeholder="max price"
-                v-model="filters.price_max"
-                type="number"
-                icon="material-symbols-attach-money-rounded"
-                class="w-24"
-              />
+          <div class="w-full flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <div>
+                <UInput
+                  placeholder="min price"
+                  v-model="filters.price_min"
+                  type="number"
+                  icon="material-symbols-attach-money-rounded"
+                  class="w-24"
+                />
+              </div>
+              <div>
+                <UInput
+                  placeholder="max price"
+                  v-model="filters.price_max"
+                  type="number"
+                  icon="material-symbols-attach-money-rounded"
+                  class="w-24"
+                />
+              </div>
             </div>
             <div>
               <UButton

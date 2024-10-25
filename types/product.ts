@@ -1,12 +1,12 @@
 import type { CategoryType } from "./category";
 
 export interface productType {
-  id: number;
+  id: null | number;
   title: string;
-  price: number;
+  price: null | number;
   description: string;
-  category: CategoryType;
-  images: string[];
+  category: null | CategoryType;
+  images: [] | string[];
 }
 
 export type FilterOptionsTypes = {

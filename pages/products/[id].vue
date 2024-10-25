@@ -1,42 +1,60 @@
 <script setup lang="ts">
+import { ref, reactive, computed, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { getProduct } from "~/services/products";
-
-//------------------
-// Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
-
-// Import Swiper styles
 import "swiper/css";
-
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-
-// import required modules
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-import { checkUser } from "~/services/auth";
-
-const { checkUserData, checkUserError } = await checkUser();
-
-const thumbsSwiper = ref(null);
-const modules = [FreeMode, Navigation, Thumbs];
-const setThumbsSwiper = (swiper: any) => {
-  thumbsSwiper.value = swiper;
-};
-//-------------------
+import type { productType } from "~/types/product";
 
 const route = useRoute();
-const product = ref();
-const productId = route.params.id as string;
-const { getProductData } = await getProduct(productId);
-product.value = getProductData?.value;
+const productId = computed(() => route.params.id as string);
+const product = reactive<productType>({
+  id: null,
+  title: "",
+  price: null,
+  description: "",
+  category: null,
+  images: [],
+});
+const loading = ref(true); // Loading state
+
+const fetchProduct = async (id: string) => {
+  loading.value = true;
+  const { data: getProductData, error: getProductError } = await useAsyncData(
+    "getProduct",
+    () => $fetch(`https://api.escuelajs.co/api/v1/products/${id}`)
+  );
+  if (getProductData.value) {
+    Object.assign(product, {
+      id: getProductData.value.id,
+      title: getProductData.value.title,
+      price: getProductData.value.price,
+      description: getProductData.value.description,
+      category: getProductData.value.category,
+      images: getProductData.value.images,
+    });
+  } else {
+    console.error("Failed to fetch product:", getProductError);
+  }
+  loading.value = false; // Data loaded
+};
+
+// Watch for changes to productId and re-fetch product data
+watch(productId, async (newId) => {
+  await fetchProduct(newId);
+});
+
+// Initial fetch on mount
+onMounted(() => fetchProduct(productId.value));
 </script>
 
 <template>
-  <div class="flex gap-3">
+  <div v-if="loading">Loading product details...</div>
+  <div class="flex gap-3" v-else-if="product.id">
     <div class="swiper-container flex-3">
-      <!-- main swiper section -->
       <swiper
         :style="{
           '--swiper-navigation-color': '#fff',
@@ -45,29 +63,14 @@ product.value = getProductData?.value;
         :spaceBetween="10"
         :navigation="true"
         :thumbs="{ swiper: thumbsSwiper }"
-        :modules="modules"
+        :modules="[FreeMode, Navigation, Thumbs]"
         class="mySwiper2 mainSwiper"
       >
         <swiper-slide v-for="(image, index) in product.images" :key="index">
-          <img :src="image[index]" />
-        </swiper-slide>
-      </swiper>
-      <!-- thumb swiper section -->
-      <swiper
-        @swiper="setThumbsSwiper"
-        :spaceBetween="10"
-        :slidesPerView="4"
-        :freeMode="true"
-        :watchSlidesProgress="true"
-        :modules="modules"
-        class="mySwiper thumbSwiper"
-      >
-        <swiper-slide v-for="(image, index) in product.images" :key="index">
-          <img :src="image[index]" />
+          <img :src="image" />
         </swiper-slide>
       </swiper>
     </div>
-    <!-- product details -->
     <div class="flex-1">
       <h1>{{ product.title }}</h1>
       <h2>{{ product.price }}</h2>
@@ -77,17 +80,14 @@ product.value = getProductData?.value;
     </div>
   </div>
 </template>
+
 <style scoped>
 .swiper-container {
-  height: 500px; /* Adjust the height as needed */
+  height: 500px;
   width: 50%;
 }
 .mainSwiper {
   height: 70%;
-  width: 100%;
-}
-.thumbSwiper {
-  height: 30%;
   width: 100%;
 }
 </style>
