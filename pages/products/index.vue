@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { CategoryType, GetCategoryRes } from "~/types/category";
 import type { FilterOptionsTypes, productType } from "../../types/product";
-import { truncateText } from "~/utils/stringFUnc";
 import { getProducts } from "~/services/products";
 import { useRouter, useRoute } from "vue-router";
 import type { Avatar } from "#ui/types";
@@ -26,13 +25,14 @@ const route = useRoute();
 // Update the query string and send request to backend
 const updateFilters = async () => {
   const query: FilterOptionsTypes = { ...filters };
-
   // Remove empty or default values from the query (keep non-zero numbers)
-  Object.keys(query).forEach((key: string) => {
-    if (!query[key]) {
-      delete query[key]; // Remove if it's falsy but not 0
+  Object.keys(query).forEach((key) => {
+    const typedKey = key as keyof FilterOptionsTypes;
+    if (!query[typedKey]) {
+      delete query[typedKey]; // Remove if it's falsy but not 0
     }
   });
+
   // Update the query string in the URL
   await router.push({ query });
   // Send request to the backend with updated query params
@@ -87,12 +87,12 @@ const {
   data: categoryData,
   status: categoryStatus,
   error: errorStatus,
-} = await useAsyncData("categories", () =>
+} = await useAsyncData<CategoryType[]>("categories", () =>
   $fetch(`https://api.escuelajs.co/api/v1/categories`)
 );
-const categoryRes = categoryData.value as GetCategoryRes[];
+const categoryRes = categoryData.value as CategoryType[];
 categories.value = categoryRes?.map((item) => {
-  return { id: item.id, label: item.name, avatar: { src: item.image } };
+  return { id: item.id, label: item.label, avatar: item.avatar };
 });
 const addToBasketHandler = (product: productType) => {
   basket.push({

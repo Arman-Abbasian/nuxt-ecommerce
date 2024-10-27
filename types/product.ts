@@ -1,17 +1,17 @@
 import type { CategoryType } from "./category";
 
 export interface productType {
-  id: null | number;
+  id: number;
   title: string;
-  price: null | number;
+  price: number;
   description: string;
-  category: null | CategoryType;
-  images: [] | string[];
+  category: CategoryType;
+  images: string[];
 }
 
 export type FilterOptionsTypes = {
   title: string;
-  categoryId: number | null;
+  categoryId: number;
   price_min: number;
   price_max: number;
 };
