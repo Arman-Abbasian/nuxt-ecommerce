@@ -1,4 +1,4 @@
-export interface basketType {
+export interface BasketType {
   id: number;
   title: string;
   price: number;

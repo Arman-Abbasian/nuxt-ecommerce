@@ -1,13 +1,13 @@
 import type { CategoryType } from "./category";
 
-export interface productType {
+export type ProductType = {
   id: number;
   title: string;
   price: number;
   description: string;
   category: CategoryType;
   images: string[];
-}
+};
 
 export type FilterOptionsTypes = {
   title: string;
