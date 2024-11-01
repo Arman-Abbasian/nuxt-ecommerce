@@ -15,7 +15,7 @@ const filters = reactive<FilterOptionsTypes>({
   price_min: 0,
   price_max: 0,
 });
-
+console.log(selectedCategory);
 // Router and Route for query string management
 const router = useRouter();
 const route = useRoute();
@@ -64,9 +64,11 @@ watch(basket, () => {
   localStorage.setItem("basket", JSON.stringify(basket));
 });
 watch(selectedCategory, () => {
+  console.log(selectedCategory);
   filters.categoryId = selectedCategory.value?.id;
   updateFilters();
 });
+
 const addLocalStorageBasketItemsToBasketReactive = () => {
   const localStorageBasket: BasketType[] = JSON.parse(
     localStorage.getItem("basket") || "[]"
@@ -106,7 +108,7 @@ const isInBasket = (productId: number): boolean => {
       <!-- filter section -->
       <ProductsFilter
         :filters="filters"
-        :selected-category="selectedCategory"
+        @selected-category="selectedCategory"
         :update-filters="updateFilters"
       />
       <!-- products section -->

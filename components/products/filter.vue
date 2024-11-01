@@ -1,50 +1,46 @@
 <script setup lang="ts">
-import type { CategoryType } from "~/types/category";
+import type { CategoryType, GetCategoryRes } from "~/types/category";
 import type { Avatar } from "#ui/types";
+import type { FilterOptionsTypes } from "~/types/product";
 
-const props = defineProps({
-  filters: {
-    type: Object,
-    default() {
-      return {
-        title: "",
-        categoryId: "",
-        price_min: 0,
-        price_max: 0,
-      };
-    },
-  },
-  selectedCategory: {
-    type: Object,
-    default: "",
-  },
-  updateFilters: {
-    type: Function,
-    retquired: true,
-  },
-});
+const props = defineProps<{
+  filters: FilterOptionsTypes;
+  updateFilters: () => void;
+}>();
+const emits = defineEmits(["selectedCategory:selectedCategory"]);
 const categories = ref<CategoryType[]>([]);
-
+const selectedCategory = ref<CategoryType>({} as CategoryType);
 //fetch categories
 const {
   data: categoryData,
   status: categoryStatus,
   error: errorStatus,
-} = await useAsyncData<CategoryType[]>("categories", () =>
+} = await useAsyncData<GetCategoryRes[]>("categories", () =>
   $fetch(`https://api.escuelajs.co/api/v1/categories`)
 );
-const categoryRes = categoryData.value as CategoryType[];
-categories.value = categoryRes?.map((item) => {
-  return { id: item.id, label: item.label, avatar: item.avatar };
+watch(selectedCategory, () => {});
+const slicedCategories: GetCategoryRes[] =
+  categoryData.value?.slice(0, 5) || [];
+
+categories.value = slicedCategories.map((item) => {
+  return { id: item.id, label: item.name, avatar: { src: item.image } };
 });
+const filterPriceButtonDisabledHandler = () => {
+  if (
+    props.filters.price_max === 0 ||
+    props.filters.price_min > props.filters.price_max
+  ) {
+    return true;
+  }
+};
 </script>
 <template>
   <div class="w-full md:h-full md:w-1/5 p-4">
     <div class="flex flex-col gap-4">
       <!-- search title -->
-      <div class="w-44">
+      <div class="w-48">
         <UInput
-          v-model="filters.title"
+          v-model="props.filters.title"
           name="title"
           placeholder="Search..."
           autocomplete="off"
@@ -57,21 +53,26 @@ categories.value = categoryRes?.map((item) => {
               variant="link"
               icon="material-symbols-search-rounded"
               :padded="false"
-              onClick="updateFilters()"
+              :onClick="props.updateFilters"
             />
           </template>
         </UInput>
       </div>
       <!-- category select -->
-      <div class="w-44">
+      <div class="w-48">
         <USelectMenu
-          v-bind="selectedCategory"
+          v-model="selectedCategory"
           :options="categories"
           searchable
           placeholder="Select a category"
         >
           <template #leading>
-            <UAvatar v-bind="(selectedCategory.avatar as Avatar)" size="xs" />
+            <UAvatar
+              v-if="selectedCategory.avatar"
+              v-bind="(selectedCategory.avatar as Avatar)"
+              size="xs"
+            />
+            <UAvatar v-else src="/images/icons/category_icon.png" size="xs" />
           </template>
           <template #option-empty="{ query }">
             <q>{{ query }}</q> not found
@@ -79,15 +80,15 @@ categories.value = categoryRes?.map((item) => {
         </USelectMenu>
       </div>
       <!-- price range inputs -->
-      <div class="w-full flex flex-col gap-2">
-        <div class="flex items-center justify-between">
+      <div class="w-48 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
           <div>
             <UInput
               placeholder="min price"
               v-model="filters.price_min"
               type="number"
               icon="material-symbols-attach-money-rounded"
-              class="w-24"
+              class=""
             />
           </div>
           <div>
@@ -96,12 +97,15 @@ categories.value = categoryRes?.map((item) => {
               v-model="filters.price_max"
               type="number"
               icon="material-symbols-attach-money-rounded"
-              class="w-24"
             />
           </div>
         </div>
         <div>
-          <UButton onClick="updateFilters" icon="material-symbols-attach-money"
+          <UButton
+            :onClick="props.updateFilters"
+            icon="material-symbols-attach-money"
+            :disabled="filterPriceButtonDisabledHandler()"
+            class="w-full"
             >filter</UButton
           >
         </div>

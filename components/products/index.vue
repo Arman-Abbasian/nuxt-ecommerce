@@ -6,15 +6,14 @@ const props = defineProps<{
   isInBasket: (id: number) => boolean;
   addToBasketHandler: (product: ProductType) => void;
 }>();
-console.log(props.products);
 </script>
 <template>
   <div class="w-full md:h-full overflow-auto md:w-4/5 h-full p-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 md:gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 md:gap-8">
       <UCard
         v-for="product in products"
         :key="product.id"
-        class="max-w-[19rem] mx-auto flex flex-col justify-between"
+        class="w-[23rem] mx-auto flex flex-col justify-between"
       >
         <template #header>
           <div class="h-72 overflow-hidden rounded-t-lg">
