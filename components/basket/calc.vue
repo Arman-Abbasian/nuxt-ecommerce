@@ -6,12 +6,15 @@ const props = defineProps<{
 }>();
 </script>
 <template>
-  <div class="w-full md:w-1/4 md:flex md:justify-end">
+  <div class="w-full md:w-1/4 md:flex md:justify-end h-[420px]">
     <div
-      class="w-64 flex flex-col gap-3 p-4 border-2 border-teal-100 rounded-md"
+      class="w-[350px] flex flex-col gap-3 p-4 border-2 border-teal-100 rounded-md"
     >
-      <div class="h-28">
-        <img src="/images/calcImage.webp" class="rounded-md w-full h-full" />
+      <div class="h-40">
+        <img
+          src="/images/calcImage.webp"
+          class="rounded-md w-full h-full object-center"
+        />
       </div>
       <div class="flex items-center gap-2">
         <h3>cart total:</h3>
@@ -30,13 +33,9 @@ const props = defineProps<{
         <h2>subtotal:</h2>
         <p class="font-bold text-2xl">{{ subtotal }}$</p>
       </div>
-      <ULink
-        to="/payment"
-        active-class="text-primary"
-        inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-      >
-        Link
-      </ULink>
+      <UButton class="w-full flex justify-center items-center">
+        <ULink to="/payment">payment </ULink>
+      </UButton>
     </div>
   </div>
 </template>
