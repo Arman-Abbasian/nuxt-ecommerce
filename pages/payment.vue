@@ -83,7 +83,7 @@ const discounCodeHandler = () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto">
+  <div class="max-w-md">
     <div class="flex justify-between items-center">
       <!-- total payment -->
       <h2>subtotal: 1200$</h2>

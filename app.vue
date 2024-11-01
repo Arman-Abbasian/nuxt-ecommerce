@@ -1,5 +1,7 @@
 <template>
   <NuxtLoadingIndicator />
   <LayoutAppHeader />
-  <NuxtPage />
+  <div class="w-[calc(100vw-2rem)] mx-auto">
+    <NuxtPage />
+  </div>
 </template>
