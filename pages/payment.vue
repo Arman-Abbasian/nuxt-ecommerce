@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { z } from "zod";
+import type { FormSubmitEvent } from "#ui/types";
 definePageMeta({
   middleware: ["auth"],
 });
@@ -70,20 +71,26 @@ const paymentOptions = [
 const discountCodee = ref("");
 
 const schema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z.string().min(8, "Must be at least 8 characters"),
+  name: z.string().min(2, "min 2 character").max(20, "max 20 character"),
+  lastname: z.string().min(2, "min 2 character").max(30, "max 30 character"),
+  state: z.string(),
+  address: z.string().min(20, "min 20 character").max(200, "max 200 character"),
+  shipping: z.string(),
+  payment: z.string(),
 });
 
-const onSubmit = () => {
-  console.log("Form submitted:", recipientForm);
-};
+type Schema = z.output<typeof schema>;
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  console.log("Form submitted:", event);
+}
 const discounCodeHandler = () => {
   alert("code is not valid");
 };
 </script>
 
 <template>
-  <div class="max-w-md">
+  <div class="max-w-sm md:max-w-md mx-auto">
     <div class="flex justify-between items-center">
       <!-- total payment -->
       <h2>subtotal: 1200$</h2>
@@ -91,7 +98,7 @@ const discounCodeHandler = () => {
       <UInput
         v-model="discountCodee"
         name="q"
-        class="p-2 max-w-64"
+        class="max-w-full"
         placeholder="Enter discount code here ..."
         autocomplete="off"
         :ui="{ icon: { trailing: { pointer: '' } } }"
@@ -102,70 +109,76 @@ const discounCodeHandler = () => {
             variant="link"
             :padded="false"
             icon="material-symbols:touch-app-outline"
-            class="bg-blue-500 py-1 px-2"
+            class="bg-blue-500 w-full h-full px-0 py-0"
             @click="discounCodeHandler"
           />
         </template>
       </UInput>
     </div>
     <!-- Recipient data -->
-    <template>
-      <UForm :state="recipientForm" class="space-y-4" @submit="onSubmit">
-        <div class="flex justify-between items-center">
-          <UFormGroup label="Name" name="name">
-            <UInput v-model="recipientForm.name" />
-          </UFormGroup>
-          <UFormGroup label="Lastname" name="lastname">
-            <UInput v-model="recipientForm.lastname" />
-          </UFormGroup>
-        </div>
-        <div class="flex gap-4 items-center">
-          <img src="/images/flags/germany-flag.png" class="w-12 rounded-md" />
-          <USelectMenu
-            v-model="recipientForm.state"
-            :options="states"
-            option-attribute="name"
-            placeholder="select a state"
-            searchable
-            searchable-placeholder="search the state"
-            class="flex-1"
-          >
-            <template #option="{ option: states }">
-              <span
-                :class="[
-                  `bg-${states.bg}-400 inline-block h-2 w-2 flex-shrink-0 rounded-full`,
-                ]"
-                aria-hidden="true"
-              />
-              <span class="truncate">{{ states.name }}</span>
-            </template>
-          </USelectMenu>
-        </div>
-        <UFormGroup label="Address" name="address">
-          <UInput v-model="recipientForm.address" />
+    <UForm
+      :schema="schema"
+      :state="recipientForm"
+      class="space-y-4"
+      @submit="onSubmit"
+    >
+      <div class="flex justify-between items-center gap-3">
+        <UFormGroup label="Name" name="name">
+          <UInput v-model="recipientForm.name" />
         </UFormGroup>
-        <!-- delivery type -->
-        <URadioGroup
-          v-model="recipientForm.shipping"
-          legend="Choose shipping options"
-          :options="shippingOptions"
-          :ui="{ fieldset: 'flex gap-4 items-center' }"
-        />
-        <!-- payment type -->
-        <URadioGroup
-          v-model="recipientForm.payment"
-          :options="paymentOptions"
-          class="flex flex-row items-center gap-2"
-          :ui="{ fieldset: 'flex gap-4 items-center' }"
+        <UFormGroup label="Lastname" name="lastname">
+          <UInput v-model="recipientForm.lastname" />
+        </UFormGroup>
+      </div>
+      <div class="flex gap-4 items-center">
+        <img src="/images/flags/germany-flag.png" class="w-12 rounded-md" />
+        <USelectMenu
+          name="state"
+          v-model="recipientForm.state"
+          :options="states"
+          option-attribute="name"
+          placeholder="select a state"
+          searchable
+          searchable-placeholder="search the state"
+          class="flex-1"
         >
-          <template #label="{ option }">
-            <img :src="option.label" class="w-16 h-8" />
+          <template #option="{ option: states }">
+            <span
+              :class="[
+                `bg-${states.bg}-400 inline-block h-2 w-2 flex-shrink-0 rounded-full`,
+              ]"
+              aria-hidden="true"
+            />
+            <span class="truncate">{{ states.name }}</span>
           </template>
-        </URadioGroup>
-        <UButton type="submit" class="w-full flex justify-center items-center"
-          >pay: 1200$</UButton
-        >
-      </UForm>
-    </template>
+        </USelectMenu>
+      </div>
+      <UFormGroup label="Address" name="address">
+        <UInput v-model="recipientForm.address" />
+      </UFormGroup>
+      <!-- delivery type -->
+      <URadioGroup
+        name="shipping"
+        v-model="recipientForm.shipping"
+        legend="Choose shipping options"
+        :options="shippingOptions"
+        :ui="{ fieldset: 'flex gap-4 items-center' }"
+      />
+      <!-- payment type -->
+      <URadioGroup
+        name="payment"
+        v-model="recipientForm.payment"
+        :options="paymentOptions"
+        class="flex flex-row items-center gap-2"
+        :ui="{ fieldset: 'flex gap-4 items-center' }"
+      >
+        <template #label="{ option }">
+          <img :src="option.label" class="w-16 h-8" />
+        </template>
+      </URadioGroup>
+      <UButton type="submit" class="w-full flex justify-center items-center"
+        >pay: 1200$</UButton
+      >
+    </UForm>
   </div>
 </template>
