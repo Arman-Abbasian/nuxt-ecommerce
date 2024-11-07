@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { z } from "zod";
+import { string, z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 definePageMeta({
   middleware: ["auth"],
@@ -21,6 +21,18 @@ const states: StateType[] = [
   { name: "Mecklenburg-Vorpommern", active: true, bg: "green" },
   { name: "North Rhine-Westphalia", active: true, bg: "blue" },
 ];
+const stateNames = [
+  "Baden-Württemberg",
+  "Bavaria",
+  "Berlin",
+  "Brandenburg",
+  "Bremen",
+  "Hamburg",
+  "Hesse",
+  "Lower Saxony",
+  "Mecklenburg-Vorpommern",
+  "North Rhine-Westphalia",
+] as const;
 
 type PayementType = {
   name: string;
@@ -73,16 +85,25 @@ const discountCodee = ref("");
 const schema = z.object({
   name: z.string().min(2, "min 2 character").max(20, "max 20 character"),
   lastname: z.string().min(2, "min 2 character").max(30, "max 30 character"),
-  state: z.string(),
+  state: z.object({
+    name: z.enum(stateNames), // Validates that `name` matches one of the state names
+    active: z.boolean(), // Validates that `active` is a boolean
+    bg: z.string().nonempty(), // Validates that `bg` is a non-empty string
+  }),
   address: z.string().min(20, "min 20 character").max(200, "max 200 character"),
-  shipping: z.string(),
-  payment: z.string(),
+  shipping: z.enum(["express", "normal"]),
+  payment: z.enum(["paypal", "mastercard", "bitpay", "visa"]),
 });
 
 type Schema = z.output<typeof schema>;
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log("Form submitted:", event);
+  try {
+    schema.parse(recipientForm);
+    console.log("Form submitted:", event.data);
+  } catch (error) {
+    console.error("Validation error:", error);
+  }
 }
 const discounCodeHandler = () => {
   alert("code is not valid");
@@ -120,7 +141,7 @@ const discounCodeHandler = () => {
       :schema="schema"
       :state="recipientForm"
       class="space-y-4"
-      @submit="onSubmit"
+      @submit.prevent="onSubmit"
     >
       <div class="flex justify-between items-center gap-3">
         <UFormGroup label="Name" name="name">
