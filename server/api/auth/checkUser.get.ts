@@ -9,6 +9,7 @@ type Response = {
 export default defineEventHandler(async (event) => {
   // Parse the incoming request body
   const cookies = parseCookies(event);
+  console.log({ cookies });
   const accessToken = cookies?.accessToken;
 
   // Define the external server URL

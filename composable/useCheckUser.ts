@@ -1,14 +1,12 @@
-import type { UserType } from "~/types/user";
+import type { CheckUserResponseType } from "~/types/user";
 
 export const useCheckUser = async () => {
   const {
     data: checkUserData,
     error: checkUserError,
     refresh: checkUserRefresh,
-  } = await useAsyncData("checkUser", () =>
-    $fetch<UserType>("/api/auth/checkUser", {
-      method: "get",
-    })
+  } = await useAsyncData<CheckUserResponseType>("checkUser", () =>
+    $fetch<CheckUserResponseType>("/api/auth/checkUser")
   );
   return { checkUserData, checkUserError, checkUserRefresh };
 };

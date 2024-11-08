@@ -100,7 +100,6 @@ type Schema = z.output<typeof schema>;
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     schema.parse(recipientForm);
-    console.log("Form submitted:", event.data);
   } catch (error) {
     console.error("Validation error:", error);
   }

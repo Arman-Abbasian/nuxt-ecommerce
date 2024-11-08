@@ -1,63 +1,29 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useLogout } from "~/composable/logout";
-import { useCheckUser } from "~/composable/useCheckUser";
-import type { UserType } from "~/types/user";
+import useAuthenticateUser from "~/composable/useAuthenticateUser";
 
-const isLoggedIn = ref(false);
+const { isLoggedIn, user } = await useAuthenticateUser();
+
 const isMenuOpen = ref(false);
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
-const user = reactive<UserType>({
-  id: null,
-  email: null,
-  name: null,
-  role: null,
-  avatar: null,
-});
-
-const route = useRoute();
-
 const logoutHandler = async () => {
   const { logoutData, logoutError } = await useLogout();
   if (logoutData.value) {
     navigateTo("/");
   }
 };
-
-watch(
-  route,
-  async () => {
-    const { checkUserData, checkUserError } = await useCheckUser();
-    if (checkUserError.value || !checkUserData.value) {
-      isLoggedIn.value = false;
-      Object.assign(user, {
-        id: null,
-        email: null,
-        name: null,
-        role: null,
-        avatar: null,
-      });
-    } else {
-      Object.assign(user, {
-        id: checkUserData?.value?.data?.data?.id,
-        email: checkUserData?.value?.data?.data?.email,
-        name: checkUserData?.value?.data?.data?.name,
-        role: checkUserData?.value?.data?.data?.role,
-        avatar: checkUserData?.value?.data?.data?.avatar,
-      });
-      isLoggedIn.value = true;
-    }
-  },
-  { immediate: true }
-);
+const closeMenu = () => {
+  isMenuOpen.value = false;
+};
 </script>
 
 <template>
-  <header class="bg-white shadow-md p-4 h-16 mb-4">
-    <nav class="container mx-auto flex justify-between items-center">
+  <header class="bg-white shadow-md md:h-16 mb-4 max-h-64 flex flex-col">
+    <nav class="container mx-auto p-4 flex justify-between items-center">
       <!-- Left side: Navigation links -->
       <div class="md:flex space-x-6 hidden">
         <NuxtLink to="/" class="text-gray-800 hover:text-blue-500"
@@ -78,7 +44,7 @@ watch(
       <div class="md:flex hidden">
         <div v-if="isLoggedIn" class="flex gap-2 items-center">
           <NuxtLink class="text-gray-800" to="/profile">{{
-            user.name
+            user?.name
           }}</NuxtLink>
           <div>
             <UIcon
@@ -117,28 +83,40 @@ watch(
     </nav>
     <!-- Mobile menu with transition -->
     <transition name="slide-down" class="w-screen">
-      <div
-        v-show="isMenuOpen"
-        class="md:hidden bg-primary-800 text-white overflow-hidden z-20"
-      >
+      <div v-show="isMenuOpen" class="md:hidden text-white pl-4 z-20">
         <ul class="flex flex-col space-y-4">
-          <NuxtLink to="/" class="text-gray-800 hover:text-blue-500"
+          <NuxtLink
+            to="/"
+            class="text-gray-800 hover:text-blue-500"
+            @click="closeMenu()"
             >Home</NuxtLink
           >
-          <NuxtLink to="/products" class="text-gray-800 hover:text-blue-500"
+          <NuxtLink
+            to="/products"
+            class="text-gray-800 hover:text-blue-500"
+            @click="closeMenu()"
             >Products</NuxtLink
           >
-          <NuxtLink to="/about-us" class="text-gray-800 hover:text-blue-500"
+          <NuxtLink
+            to="/about-us"
+            class="text-gray-800 hover:text-blue-500"
+            @click="closeMenu()"
             >About us</NuxtLink
           >
-          <NuxtLink to="/basket" class="text-gray-800 hover:text-blue-500"
+          <NuxtLink
+            to="/basket"
+            class="text-gray-800 hover:text-blue-500"
+            @click="closeMenu()"
             >Basket</NuxtLink
           >
           <div>
             <div v-if="isLoggedIn" class="flex gap-2 items-center">
-              <NuxtLink class="text-gray-800" to="/profile">{{
-                user.name
-              }}</NuxtLink>
+              <NuxtLink
+                class="text-gray-800"
+                @click="closeMenu()"
+                to="/profile"
+                >{{ user?.name }}</NuxtLink
+              >
               <div>
                 <UIcon
                   name="material-symbols:logout"
@@ -151,6 +129,7 @@ watch(
               v-else
               to="/auth/login"
               class="text-gray-800 hover:text-blue-500"
+              @click="closeMenu()"
               ><UIcon name="material-symbols:login" class="w-5 h-5"
             /></NuxtLink>
           </div>

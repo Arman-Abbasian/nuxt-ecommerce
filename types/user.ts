@@ -1,7 +1,8 @@
 export type UserType = {
-  id: null | number;
-  email: null | string;
-  name: null | string;
-  role: null | "customer" | "admin";
-  avatar: null | string;
+  id: number;
+  email: string;
+  name: string;
+  role: "customer" | "admin";
+  avatar: string;
 };
+export type CheckUserResponseType = { data: { data: UserType } };
