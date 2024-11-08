@@ -35,7 +35,7 @@ const filterPriceButtonDisabledHandler = () => {
 };
 </script>
 <template>
-  <div class="w-full md:h-full md:w-1/5 p-4">
+  <div class="w-full md:h-full md:w-1/5">
     <div class="flex flex-col gap-4">
       <!-- search title -->
       <div class="w-48">

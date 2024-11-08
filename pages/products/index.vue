@@ -9,6 +9,7 @@ import type { BasketType } from "~/types/basket";
 const products = ref<ProductType[]>([]);
 const selectedCategory = ref<CategoryType>({} as CategoryType);
 const basket = reactive([] as BasketType[]);
+const isOpenFilterSlideOver = ref<boolean>(false);
 const filters = reactive<FilterOptionsTypes>({
   title: "",
   categoryId: selectedCategory?.value.id,
@@ -35,6 +36,7 @@ const updateFilters = async () => {
   await router.push({ query });
   // Send request to the backend with updated query params
   fetchFilteredProducts();
+  isOpenFilterSlideOver.value = false;
 };
 
 // Fetch the filtered products from the backend
@@ -100,6 +102,10 @@ const isInBasket = (productId: number): boolean => {
   }
   return false;
 };
+
+const openFilterSlideOver = () => {
+  isOpenFilterSlideOver.value = true;
+};
 </script>
 
 <template>
@@ -110,6 +116,48 @@ const isInBasket = (productId: number): boolean => {
         :filters="filters"
         @selected-category="selectedCategory"
         :update-filters="updateFilters"
+        class="hidden md:block"
+      />
+      <USlideover v-model="isOpenFilterSlideOver" side="left" class="md:hidden">
+        <UCard
+          class="flex flex-col flex-1 overflow-auto p-4"
+          :ui="{
+            body: { base: 'flex-1 overflow-auto' },
+            ring: '',
+            divide: 'divide-y divide-primary-200 dark:divide-primary-800',
+          }"
+        >
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h3
+                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+              >
+                filter section
+              </h3>
+              <UButton
+                color="gray"
+                variant="ghost"
+                icon="i-heroicons-x-mark-20-solid"
+                @click="isOpenFilterSlideOver = false"
+              />
+            </div>
+            <Placeholder class="h-8" />
+          </template>
+          <ProductsFilter
+            :filters="filters"
+            @selected-category="selectedCategory"
+            :update-filters="updateFilters"
+            class="mt-8"
+          />
+        </UCard>
+      </USlideover>
+      <UButton
+        color="gray"
+        variant="ghost"
+        icon="material-symbols:filter-alt-outline"
+        class="md:hidden"
+        label="filters"
+        @click="openFilterSlideOver"
       />
       <!-- products section -->
       <Products

@@ -6,7 +6,7 @@ export default defineAppConfig({
       body: {
         base: "",
         background: "",
-        padding: "px-4 py-4 sm:p-4",
+        padding: "px-0 py-0 sm:p-0",
       },
       header: {
         base: "",
