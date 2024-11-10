@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CategoryType, GetCategoryRes } from "~/types/category";
+import type { CategoryType } from "~/types/category";
 import type { FilterOptionsTypes, ProductType } from "../../types/product";
 import { getProducts } from "~/services/products";
 import { useRouter, useRoute } from "vue-router";
