@@ -32,7 +32,7 @@ const closeMenu = () => {
         <NuxtLink to="/products" class="text-gray-800 hover:text-blue-500"
           >Products</NuxtLink
         >
-        <NuxtLink to="/about-us" class="text-gray-800 hover:text-blue-500"
+        <NuxtLink to="/aboutUs" class="text-gray-800 hover:text-blue-500"
           >About us</NuxtLink
         >
         <NuxtLink to="/basket" class="text-gray-800 hover:text-blue-500"
@@ -98,7 +98,7 @@ const closeMenu = () => {
             >Products</NuxtLink
           >
           <NuxtLink
-            to="/about-us"
+            to="/aboutUs"
             class="text-gray-800 hover:text-blue-500"
             @click="closeMenu()"
             >About us</NuxtLink

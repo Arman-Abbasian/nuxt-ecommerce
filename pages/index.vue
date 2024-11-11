@@ -17,6 +17,8 @@ const mobileItems = [
 
 // Use a media query to check if the screen is at least medium-sized (md)
 const isDesktop = useMediaQuery("(min-width: 768px)");
+
+console.log(isDesktop.value);
 </script>
 
 <template>
