@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TextIcon from "~/common/TextIcon.vue";
+
 type JobPositions = {
   id: number;
   title: string;
@@ -84,6 +86,43 @@ const jobPositions: JobPositions[] = [
         delivering the best online shopping experience. Our culture is built on
         collaboration, innovation, and a shared commitment to excellence.
       </p>
+    </UContainer>
+
+    <UContainer class="flex flex-col w-full">
+      <div class="w-full">
+        <img
+          src="/images/others/contact-us.webp"
+          class="w-full h-60 rounded-md object-center"
+        />
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="bg-primary-400">
+          <h1 class="text-center">contact us</h1>
+          <TextIcon
+            icon-name="material-symbols-light:phone-enabled-outline-sharp"
+            text="+491111111"
+          />
+          <TextIcon
+            icon-name="material-symbols-light:stacked-email-outline"
+            text="nuxt.ecommerce@gmail.com"
+          />
+          <TextIcon
+            icon-name="material-symbols-light:nest-heat-link-gen-3-outline"
+            text="www.instagram.com"
+          />
+          <TextIcon
+            icon-name="material-symbols-light:location-on-outline"
+            text="Germany-Berlin-..."
+          />
+        </div>
+        <div class="bg-secondary-600">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d310847.3190256848!2d13.095097421551865!3d52.506386167430094!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a84e373f035901%3A0x42120465b5e3b70!2sBerlin%2C%20Germany!5e0!3m2!1sen!2sus!4v1731654801709!5m2!1sen!2sus"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+      </div>
     </UContainer>
   </div>
 </template>
