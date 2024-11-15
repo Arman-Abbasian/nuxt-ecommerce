@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ImageCard from "~/common/ImageCard.vue";
+import Cart from "~/common/ImageCard.vue";
 import TextIcon from "~/common/TextIcon.vue";
 
 type JobPositions = {
@@ -54,31 +56,35 @@ const jobPositions: JobPositions[] = [
         class="h-full w-screen object-cover object-center rounded-md"
       />
     </div>
-    <div class="h-[20%]">
+    <div class="h-[20%] mb-8">
       <h1 class="text-center mb-4 text-3xl font-bold">About us</h1>
       <p class="text-center">
         We gift you trust, speed, and quality. Just experience shopping with us
         once.
       </p>
     </div>
-    <UContainer
-      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4"
-    >
-      <UCard v-for="job in jobPositions" :key="job.id" class="overflow-hidden">
-        <template #header>
-          <Placeholder class="h-8" />
-          <img :src="`/images/workers/${job.image}`" class="overflow-hidden" />
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
+      <ImageCard
+        v-for="job in jobPositions"
+        :key="job.id"
+        class="overflow-hidden"
+        :src="`/images/workers/${job.image}`"
+      >
+        <template v-slot:body>
+          <TextIcon
+            icon-name="material-symbols-light:person"
+            :text="job.title"
+          />
         </template>
-
-        <Placeholder class="h-32" />
-        {{ job.title }}
-        <template #footer>
-          <Placeholder class="h-8" />
-          {{ job.contact }}
+        <template v-slot:footer>
+          <TextIcon
+            icon-name="material-symbols-light:mobile-friendly-outline"
+            :text="job.contact"
+          />
         </template>
-      </UCard>
-    </UContainer>
-    <UContainer>
+      </ImageCard>
+    </div>
+    <div class="mb-4">
       <h1 class="text-center">Team Culture At Nuxt ecommerce</h1>
       <p>
         our team is the heart of everything we do. We’re a group of creative,
@@ -86,13 +92,15 @@ const jobPositions: JobPositions[] = [
         delivering the best online shopping experience. Our culture is built on
         collaboration, innovation, and a shared commitment to excellence.
       </p>
-    </UContainer>
-
-    <UContainer class="flex flex-col w-full">
+    </div>
+    <!-- cotact us -->
+    <div
+      class="flex flex-col w-full rounded-md overflow-hidden border-1 border-purple-300"
+    >
       <div class="w-full">
         <img
           src="/images/others/contact-us.webp"
-          class="w-full h-60 rounded-md object-center"
+          class="w-full h-60 object-center"
         />
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2">
@@ -123,6 +131,6 @@ const jobPositions: JobPositions[] = [
           ></iframe>
         </div>
       </div>
-    </UContainer>
+    </div>
   </div>
 </template>
