@@ -12,10 +12,10 @@
 <script setup lang="ts">
 const props = defineProps(["src"]);
 const ui = {
-  base: "ring-1 ring-gray-500",
+  base: "",
   background: "bg-white dark:bg-gray-900",
   divide: "divide-y divide-gray-200 dark:divide-gray-800",
-  ring: "ring-1 ring-gray-600 dark:ring-gray-800",
+  ring: "ring-1 ring-green-600 dark:ring-green-800",
   rounded: "rounded-md",
   shadow: "shadow",
   body: {

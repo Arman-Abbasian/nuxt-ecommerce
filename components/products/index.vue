@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ImageCard from "~/common/ImageCard.vue";
 import type { ProductType } from "~/types/product";
 
 const props = defineProps<{
@@ -10,35 +11,31 @@ const props = defineProps<{
 <template>
   <div class="w-full md:h-full overflow-auto md:w-4/5 h-full p-4">
     <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 md:gap-8">
-      <UCard
+      <ImageCard
         v-for="product in products"
         :key="product.id"
-        class="w-[23rem] mx-auto flex flex-col justify-between"
+        class="w-[23rem] overflow-hidden"
+        :src="product.images[0]"
       >
-        <template #header>
-          <div class="h-72 overflow-hidden rounded-t-lg">
-            <img
-              :src="product.images[0]"
-              class="w-full h-full overflow-hidden object-cover rounded-t-lg"
-              :alt="product.title"
-            />
+        <template v-slot:body>
+          <div class="">
+            <h4
+              class="card-title text-nowrap overflow-clip text-ellipsis mb-4 text-gray-700"
+            >
+              {{ product.title }}
+            </h4>
+            <p class="card-text text-nowrap overflow-clip text-ellipsis mb-6">
+              {{ product.description }}
+            </p>
+            <p
+              class="text-nowrap overflow-clip text-ellipsis text-gray-700 font-bold"
+            >
+              price: {{ product.price }}$
+            </p>
           </div>
         </template>
-
-        <div class="h-20">
-          <h5 class="card-title text-nowrap overflow-clip text-ellipsis">
-            {{ product.title }}
-          </h5>
-          <p class="card-text text-nowrap overflow-clip text-ellipsis">
-            {{ product.description }}
-          </p>
-          <p class="text-nowrap overflow-clip text-ellipsis">
-            price: {{ product.price }}$
-          </p>
-        </div>
-
-        <template #footer>
-          <div class="flex justify-between items-center h-8 px-2">
+        <template v-slot:footer>
+          <div class="flex justify-between items-center py-2">
             <UButton
               :to="`/products/${product.id}`"
               target="_blank"
@@ -57,7 +54,7 @@ const props = defineProps<{
             />
           </div>
         </template>
-      </UCard>
+      </ImageCard>
     </div>
   </div>
 </template>
