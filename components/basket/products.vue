@@ -11,7 +11,11 @@ const props = defineProps<{
   <div
     class="w-full md:w-3/4 flex flex-col gap-4 h-80 md:h-[calc(100vh-6rem)] overflow-auto"
   >
-    <div class="flex gap-3 w-[350px]" v-for="item in basket" :key="item.id">
+    <div
+      class="flex gap-3 items-center w-[350px] h-96"
+      v-for="item in basket"
+      :key="item.id"
+    >
       <div class="w-[100px]">
         <img
           class="w-24 h-24 rounded-md object-cover"
@@ -19,10 +23,14 @@ const props = defineProps<{
           :alt="item.title"
         />
       </div>
-      <div class="flex flex-col gap-2 w-[200px] justify-between items-stretch">
-        <h1 class="whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+      <div
+        class="flex flex-col justify-between items-stretch gap-1 w-[250px] h-full"
+      >
+        <p
+          class="whitespace-nowrap overflow-hidden text-ellipsis font-bold max-w-full"
+        >
           {{ item.title }}
-        </h1>
+        </p>
         <p class="whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
           {{ item.totalPrice }} $
         </p>
