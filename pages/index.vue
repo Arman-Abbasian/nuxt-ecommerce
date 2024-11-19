@@ -18,7 +18,19 @@ const mobileItems = [
 // Use a media query to check if the screen is at least medium-sized (md)
 const isDesktop = useMediaQuery("(min-width: 768px)");
 
-console.log(isDesktop.value);
+const carouselRef = ref();
+
+onMounted(() => {
+  setInterval(() => {
+    if (!carouselRef.value) return;
+
+    if (carouselRef.value.page === carouselRef.value.pages) {
+      return carouselRef.value.select(0);
+    }
+
+    carouselRef.value.next();
+  }, 3000);
+});
 </script>
 
 <template>
@@ -26,6 +38,7 @@ console.log(isDesktop.value);
     :items="isDesktop ? desktopItems : mobileItems"
     class="rounded-lg overflow-hidden h-[calc(100vh-6rem)]"
     indicators
+    ref="carouselRef"
   >
     <!-- Bind the `src` attribute to each item in the carousel -->
     <template v-slot="{ item }">

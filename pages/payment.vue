@@ -168,7 +168,7 @@ const discounCodeHandler = () => {
                 `bg-${states.bg}-400 inline-block h-2 w-2 flex-shrink-0 rounded-full`,
               ]"
               aria-hidden="true"
-            />
+            ></
             <span class="truncate">{{ states.name }}</span>
           </template>
         </USelectMenu>
