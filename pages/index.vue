@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useMediaQuery } from "@vueuse/core";
-
 const desktopItems = [
   "/images/desktop/miscellaneous.webp",
   "/images/desktop/furniture.webp",
@@ -14,10 +13,13 @@ const mobileItems = [
   "/images/mobile/cloth.webp",
   "/images/mobile/electronic.webp",
 ];
+// Check if the screen width is md (768px) or lower
+const isMobile = useMediaQuery("(max-width: 1023px)");
 
-// Use a media query to check if the screen is at least medium-sized (md)
-const isDesktop = useMediaQuery("(min-width: 768px)");
-
+// Use mobileItems if on a small screen, otherwise use items
+const selectedItems = computed(() =>
+  isMobile.value ? mobileItems : desktopItems
+);
 const carouselRef = ref();
 
 onMounted(() => {
@@ -32,17 +34,18 @@ onMounted(() => {
   }, 3000);
 });
 </script>
-
 <template>
   <UCarousel
-    :items="isDesktop ? desktopItems : mobileItems"
-    class="rounded-lg overflow-hidden h-[calc(100vh-6rem)]"
+    v-slot="{ item }"
+    :items="selectedItems"
+    class="w-[calc(100vw-2rem)] mx-auto rounded-lg overflow-hidden h-[calc(100vh-6rem)]"
     indicators
     ref="carouselRef"
+    :ui="{
+      container: 'h-full',
+      item: 'w-full h-full object-cover object-center',
+    }"
   >
-    <!-- Bind the `src` attribute to each item in the carousel -->
-    <template v-slot="{ item }">
-      <img :src="item" class="w-full object-center" draggable="true" />
-    </template>
+    <img :src="item" class="w-full h-full object-center" draggable="false" />
   </UCarousel>
 </template>
