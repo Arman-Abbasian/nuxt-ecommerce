@@ -105,7 +105,7 @@ const filterPriceButtonDisabledHandler = () => {
             :onClick="props.updateFilters"
             icon="material-symbols-attach-money"
             :disabled="filterPriceButtonDisabledHandler()"
-            class="w-full"
+            class="w-full flex justify-center items-center"
             >filter</UButton
           >
         </div>
