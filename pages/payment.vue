@@ -45,7 +45,7 @@ type PayementType = {
 const recipientForm: PayementType = reactive({
   name: "",
   lastname: "",
-  state: {} as StateType,
+  state: states[0],
   address: "",
   shipping: "normal",
   payment: "paypal",
@@ -100,6 +100,7 @@ type Schema = z.output<typeof schema>;
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     schema.parse(recipientForm);
+    
   } catch (error) {
     console.error("Validation error:", error);
   }
