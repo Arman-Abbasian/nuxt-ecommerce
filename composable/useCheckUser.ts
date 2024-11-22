@@ -5,8 +5,9 @@ export const useCheckUser = async () => {
     data: checkUserData,
     error: checkUserError,
     refresh: checkUserRefresh,
+    status: checkUserStatus,
   } = await useAsyncData<CheckUserResponseType>("checkUser", () =>
     $fetch<CheckUserResponseType>("/api/auth/checkUser")
   );
-  return { checkUserData, checkUserError, checkUserRefresh };
+  return { checkUserData, checkUserError, checkUserRefresh, checkUserStatus };
 };

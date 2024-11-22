@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import { useGuestNavigate } from "~/composable/guestNavigate";
 import type { BasketType } from "~/types/basket";
 
-definePageMeta({
-  middleware: ["auth"],
-});
+// definePageMeta({
+//   middleware: ["auth"],
+// });
 
 const basket = reactive<BasketType[]>([]);
-onMounted(() => {
+const isChecked = ref(false);
+onMounted(async () => {
+  await useGuestNavigate();
+  isChecked.value = true;
   const localStorageBasket: BasketType[] = JSON.parse(
     localStorage.getItem("basket") || "[]"
   );
-  console.log(localStorageBasket);
   basket.push(...localStorageBasket);
 });
 function addQuantity(id: number) {
@@ -49,7 +52,7 @@ const subtotal: ComputedRef<number> = computed(() => {
 });
 </script>
 <template>
-  <div class="flex flex-col md:flex-row gap-4">
+  <div class="flex flex-col md:flex-row gap-4" v-if="isChecked">
     <!-- basket items -->
     <BasketProducts
       :add-quantity="addQuantity"

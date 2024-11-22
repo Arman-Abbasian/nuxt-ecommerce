@@ -3,9 +3,14 @@ import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 import type { LoginType } from "~/types/login";
 import { useLogin } from "~/composable/login";
+import { useHostNavigate } from "~/composable/hostNavigate";
 
-definePageMeta({
-  middleware: ["login"],
+// definePageMeta({
+//   middleware: ["login"],
+// });
+
+onMounted(async () => {
+  await useHostNavigate();
 });
 
 const schema = z.object({

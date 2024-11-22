@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useLogout } from "~/composable/logout";
-import useAuthenticateUser from "~/composable/useAuthenticateUser";
+import { useAuth } from "~/composable/useAuth";
 
-const { isLoggedIn, user } = await useAuthenticateUser();
+const { authUser } = useAuth();
 
 const isMenuOpen = ref(false);
 
@@ -42,9 +42,9 @@ const closeMenu = () => {
 
       <!-- Right side: Login or Username -->
       <div class="md:flex hidden">
-        <div v-if="isLoggedIn" class="flex gap-2 items-center">
+        <div v-if="authUser" class="flex gap-2 items-center">
           <NuxtLink class="text-gray-800" to="/profile">{{
-            user?.name
+            authUser?.name
           }}</NuxtLink>
           <div>
             <UIcon
@@ -110,12 +110,12 @@ const closeMenu = () => {
             >Basket</NuxtLink
           >
           <div>
-            <div v-if="isLoggedIn" class="flex gap-2 items-center">
+            <div v-if="authUser?.id" class="flex gap-2 items-center">
               <NuxtLink
                 class="text-gray-800"
                 @click="closeMenu()"
                 to="/profile"
-                >{{ user?.name }}</NuxtLink
+                >{{ authUser.name }}</NuxtLink
               >
               <div>
                 <UIcon
