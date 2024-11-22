@@ -4,19 +4,20 @@ import type { FilterOptionsTypes, ProductType } from "../../types/product";
 import { getProducts } from "~/services/products";
 import { useRouter, useRoute } from "vue-router";
 import type { BasketType } from "~/types/basket";
+import Loader from "~/common/Loader.vue";
 
 //---------------------
 const products = ref<ProductType[]>([]);
 const selectedCategory = ref<CategoryType>({} as CategoryType);
 const basket = reactive([] as BasketType[]);
 const isOpenFilterSlideOver = ref<boolean>(false);
+const isChecked = ref(false);
 const filters = reactive<FilterOptionsTypes>({
   title: "",
   categoryId: selectedCategory?.value.id,
   price_min: 0,
   price_max: 0,
 });
-console.log(selectedCategory);
 // Router and Route for query string management
 const router = useRouter();
 const route = useRoute();
@@ -41,6 +42,7 @@ const updateFilters = async () => {
 
 // Fetch the filtered products from the backend
 async function fetchFilteredProducts() {
+  isChecked.value = false;
   // Build the query string from the current route.query
   const query = new URLSearchParams(
     Object.entries(route.query).reduce((acc, [key, value]) => {
@@ -56,6 +58,7 @@ async function fetchFilteredProducts() {
   // Fetch products from the backend using the built query string
   const { getProductsData } = await getProducts(query); // Your API request logic
   products.value = getProductsData.value as ProductType[]; // Assume the backend returns a list of products
+  isChecked.value = true;
 }
 
 // Watch for changes in the route to refetch filtered products
@@ -160,7 +163,14 @@ const openFilterSlideOver = () => {
         @click="openFilterSlideOver"
       />
       <!-- products section -->
+      <div
+        class="w-full md:h-full overflow-auto md:w-4/5 h-full p-4"
+        v-if="!isChecked"
+      >
+        <Loader />
+      </div>
       <Products
+        v-else
         :products="products"
         :isInBasket="isInBasket"
         :addToBasketHandler="addToBasketHandler"

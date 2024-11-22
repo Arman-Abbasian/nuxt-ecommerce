@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Loader from "~/common/Loader.vue";
 import { useGuestNavigate } from "~/composable/guestNavigate";
 import type { BasketType } from "~/types/basket";
 
@@ -52,7 +53,10 @@ const subtotal: ComputedRef<number> = computed(() => {
 });
 </script>
 <template>
-  <div class="flex flex-col md:flex-row gap-4" v-if="isChecked">
+  <div class="fixed top-0 right-0 w-screen h-screen" v-if="!isChecked">
+    <Loader />
+  </div>
+  <div class="flex flex-col md:flex-row gap-4" v-else>
     <!-- basket items -->
     <BasketProducts
       :add-quantity="addQuantity"
